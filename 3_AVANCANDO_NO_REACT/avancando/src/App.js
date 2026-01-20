@@ -6,10 +6,11 @@ import ListRender from './components/ListRender';
 import ManageData from './components/ManageData';
 import ShowUserName from './components/ShowUserName';
 import CarDetails from './components/CarDetails';
+import Fragment from './components/Fragment';
 
 function App() {
-  const name = "Raul"
-  const [userName] = useState("Maria")
+  // const name = "Raul"
+  const [userName] = useState("Raul")
 
   const cars = [
     { id: 1, brand: "Ferrari", color: "Vermelho", km: 0, newCar: true },
@@ -47,6 +48,8 @@ function App() {
           newCar={car.newCar} 
         />
       ))}
+        {/* fragment */}
+        <Fragment propFragment="Teste" />
     </div>
 
   );
