@@ -4,6 +4,9 @@ import { useState, useEffect } from 'react';
 function App() {
   const [products, setProducts] = useState([]);
 
+  const [name, setName] = useState('');
+  const [price, setPrice] = useState('');
+
   const url = 'http://localhost:3000/products';
 
   useEffect(() => {
@@ -15,7 +18,29 @@ function App() {
     fetchData();
   }, []);
 
-  // console.log(products);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const newProduct = {
+      name,
+      price,
+    };
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newProduct),
+    });
+
+    const addedProduct = await response.json();
+
+    setProducts((prevProducts) => [...prevProducts, addedProduct]);
+
+    setName("");
+    setPrice("");
+  };
 
   return (
     <div className="App">
@@ -27,6 +52,19 @@ function App() {
           </li>
         ))}
       </ul>
+      <div className="add-product">
+        <form onSubmit={handleSubmit}>
+          <label htmlFor="name">
+            Nome:
+            <input type="text" value={name} name='name' onChange={(e) => setName(e.target.value)} />
+          </label>
+          <label htmlFor="price">
+            Preço:
+            <input type="number" value={price} name='price' onChange={(e) => setPrice(e.target.value)} />
+          </label>
+          <button type="submit">Adicionar</button>
+        </form>
+      </div>
     </div>
   );
 }
