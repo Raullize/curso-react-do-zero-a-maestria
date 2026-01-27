@@ -7,7 +7,7 @@ const url = 'http://localhost:3000/products';
 function App() {
   const [products, setProducts] = useState([]);
 
-  const { data: productsData } = useFetch(url);
+  const { data: productsData, httpConfig } = useFetch(url);
 
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
@@ -29,17 +29,19 @@ function App() {
       price,
     };
 
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(newProduct),
-    });
+    // const response = await fetch(url, {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify(newProduct),
+    // });
 
-    const addedProduct = await response.json();
+    // const addedProduct = await response.json();
 
-    setProducts((prevProducts) => [...prevProducts, addedProduct]);
+    // setProducts((prevProducts) => [...prevProducts, addedProduct]);
+
+    httpConfig(newProduct, 'POST');
 
     setName("");
     setPrice("");

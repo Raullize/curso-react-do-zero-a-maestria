@@ -19,6 +19,11 @@
       "name": "Teclado",
       "price": "290.90",
       "id": 4
+    },
+    {
+      "name": "Mouse",
+      "price": "120.00",
+      "id": 5
     }
   ]
 }

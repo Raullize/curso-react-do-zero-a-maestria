@@ -3,6 +3,24 @@ import { useState, useEffect } from 'react';
 export const useFetch = (url) => {
     const [data, setData] = useState(null);
 
+    const [config, setConfig] = useState(null);
+    const [method, setMethod] = useState(null);
+    const [callFetch, setCallFetch] = useState(false);
+
+    const httpConfig = (data, method) => {
+        if(method === 'POST') {
+            setConfig({
+                method,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+
+            setMethod(method);
+        }
+    }
+
     useEffect(() => {
         const fetchData = async () => {
             const response = await fetch(url);
@@ -10,7 +28,22 @@ export const useFetch = (url) => {
             setData(json);
         };
         fetchData();
-    }, [url]);
+    }, [url, callFetch]);
 
-    return { data };
+    useEffect(() => {
+        const httpResquest = async () => {
+            if (method === 'POST') {
+                let fetchOptions = [url, config]
+
+                const response = await fetch(...fetchOptions);
+
+                const json = await response.json();
+
+                setCallFetch(json);
+            }
+        };
+        httpResquest();
+    }, [config, method, url]);
+
+    return { data, httpConfig };
 }
