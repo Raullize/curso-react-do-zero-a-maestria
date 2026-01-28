@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from "react";
 
 export const useFetch = (url) => {
     const [data, setData] = useState(null);
@@ -9,49 +9,88 @@ export const useFetch = (url) => {
 
     const [loading, setLoading] = useState(false);
 
+    const [error, setError] = useState(false);
+
+    const [itemId, setItemId] = useState(null);
+
     const httpConfig = (data, method) => {
-        if(method === 'POST') {
+        if (method === "POST") {
             setConfig({
-                method,
+                method: "POST",
                 headers: {
-                    'Content-Type': 'application/json',
+                    "Content-Type": "application/json",
                 },
                 body: JSON.stringify(data),
-            })
+            });
 
-            setMethod(method);
+            setMethod("POST");
+        } else if (method === "DELETE") {
+            setConfig({
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+
+            setMethod("DELETE");
+            setItemId(data);
         }
-    }
+    };
 
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
 
-            const response = await fetch(url);
+            try {
+                const res = await fetch(url);
 
-            const json = await response.json();
+                const json = await res.json();
 
-            setData(json);
+                setData(json);
+
+                setMethod(null);
+
+                setError(null);
+            } catch (error) {
+                console.log(error.message);
+
+                setError("Houve um erro ao carregar os dados!");
+            }
 
             setLoading(false);
         };
+
         fetchData();
     }, [url, callFetch]);
 
     useEffect(() => {
-        const httpResquest = async () => {
-            if (method === 'POST') {
-                let fetchOptions = [url, config]
+        const httpRequest = async () => {
+            if (method === "POST") {
+                setLoading(true);
 
-                const response = await fetch(...fetchOptions);
+                let fetchOptions = [url, config];
 
-                const json = await response.json();
+                const res = await fetch(...fetchOptions);
+
+                const json = await res.json();
+
+                setCallFetch(json);
+                // 9 - desafio
+            } else if (method === "DELETE") {
+                const deleteUrl = `${url}/${itemId}`;
+
+                const res = await fetch(deleteUrl, config);
+
+                const json = await res.json();
 
                 setCallFetch(json);
             }
         };
-        httpResquest();
-    }, [config, method, url]);
 
-    return { data, httpConfig, loading };
-}
+        httpRequest();
+    }, [config]);
+
+    console.log(config);
+
+    return { data, httpConfig, loading, error };
+};
