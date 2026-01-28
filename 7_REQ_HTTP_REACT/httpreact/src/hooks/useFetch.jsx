@@ -75,7 +75,6 @@ export const useFetch = (url) => {
                 const json = await res.json();
 
                 setCallFetch(json);
-                // 9 - desafio
             } else if (method === "DELETE") {
                 const deleteUrl = `${url}/${itemId}`;
 

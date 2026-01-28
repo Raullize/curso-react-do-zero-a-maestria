@@ -1,78 +1,93 @@
-import './App.css';
-import { useState, useEffect } from 'react';
-import { useFetch } from './hooks/useFetch';
+import "./App.css";
+import { useState, useEffect } from "react";
+import { useFetch } from "./hooks/useFetch";
 
-const url = 'http://localhost:3000/products';
+// "http://localhost:3001/products"
+const url = "http://localhost:3000/products";
 
 function App() {
   const [products, setProducts] = useState([]);
 
-  const { data: productsData, httpConfig, loading, error } = useFetch(url);
+  const { data: items, httpConfig, loading, error } = useFetch(url);
 
-  const [name, setName] = useState('');
-  const [price, setPrice] = useState('');
+  const [name, setName] = useState("");
+  const [price, setPrice] = useState("");
 
-  // useEffect(() => {
-  //   async function fetchData() {
-  //     const response = await fetch(url);
-  //     const data = await response.json();
-  //     setProducts(data);
-  //   }
-  //   fetchData();
+  // useEffect(async () => {
+  //   const res = await fetch("http://localhost:3000/products");
+
+  //   const data = await res.json();
+
+  //   setProducts(data);
   // }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const newProduct = {
+    const product = {
       name,
       price,
     };
 
-    // const response = await fetch(url, {
-    //   method: 'POST',
+    // const res = await fetch("http://localhost:3000/products", {
+    //   method: "POST",
     //   headers: {
-    //     'Content-Type': 'application/json',
+    //     "Content-Type": "application/json",
     //   },
-    //   body: JSON.stringify(newProduct),
+    //   body: JSON.stringify(product),
     // });
 
-    // const addedProduct = await response.json();
+    // const addedProduct = await res.json();
 
     // setProducts((prevProducts) => [...prevProducts, addedProduct]);
 
-    httpConfig(newProduct, 'POST');
+    httpConfig(product, "POST");
 
     setName("");
     setPrice("");
   };
 
+  const handleRemove = (id) => {
+    httpConfig(id, "DELETE");
+  };
+
   return (
     <div className="App">
-      <h1>Lista de Produtos</h1>
+      <h1>Lista de produtos</h1>
       {loading && <p>Carregando dados...</p>}
       {error && <p>{error}</p>}
-      {!loading && (
-        <ul>
-          {productsData && productsData.map((product) => (
+      <ul>
+        {items &&
+          items.map((product) => (
             <li key={product.id}>
-              {product.name} - R$ {product.price}
+              {product.name} - R$: {product.price}
+              <button onClick={() => handleRemove(product.id)}>Excluir</button>
             </li>
           ))}
-        </ul>
-      )}
+      </ul>
+
       <div className="add-product">
+        <p>Adicionar produto:</p>
         <form onSubmit={handleSubmit}>
-          <label htmlFor="name">
+          <label>
             Nome:
-            <input type="text" value={name} name='name' onChange={(e) => setName(e.target.value)} />
+            <input
+              type="text"
+              value={name}
+              name="name"
+              onChange={(e) => setName(e.target.value)}
+            />
           </label>
-          <label htmlFor="price">
+          <label>
             Preço:
-            <input type="number" value={price} name='price' onChange={(e) => setPrice(e.target.value)} />
+            <input
+              type="number"
+              value={price}
+              name="price"
+              onChange={(e) => setPrice(e.target.value)}
+            />
           </label>
-          {loading && <input type="submit" disabled value="Criando..." />}
-          {!loading && <input type="submit" value="Criar" />}
+          {loading ? <p>Aguarde!</p> : <input type="submit" value="Criar" />}
         </form>
       </div>
     </div>
