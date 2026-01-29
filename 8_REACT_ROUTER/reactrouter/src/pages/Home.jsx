@@ -4,7 +4,6 @@ import { useFetch } from "../hooks/useFetch";
 import "./Home.css";
 
 const Home = () => {
-    // 3 - carregamento de dados
     const url = "http://localhost:3000/products";
 
     const { data: items, loading, error } = useFetch(url);
@@ -20,7 +19,6 @@ const Home = () => {
                         <li key={product.id}>
                             <h2>{product.name}</h2>
                             <p>R$: {product.price}</p>
-                            {/* 4  - rota dinamica */}
                             <Link to={`/products/${product.id}`}>Detalhes</Link>
                         </li>
                     ))}
