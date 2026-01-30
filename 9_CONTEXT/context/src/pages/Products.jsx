@@ -1,7 +1,14 @@
-const Products = () => {
-  return (
-    <div>Products</div>
-  )
-}
+import { useCounterContext } from "../hooks/useCounterContext";
 
-export default Products
+const Products = () => {
+  const { counter } = useCounterContext();
+
+  return (
+    <div>
+      <h1>Lista de produtos</h1>
+      <p>Valor contador: {counter}</p>
+    </div>
+  );
+};
+
+export default Products;
