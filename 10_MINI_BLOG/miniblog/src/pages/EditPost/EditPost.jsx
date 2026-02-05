@@ -71,7 +71,6 @@ const EditPost = () => {
 
         updateDocument(id, data);
 
-        // redirect to home page
         navigate("/dashboard");
     };
 

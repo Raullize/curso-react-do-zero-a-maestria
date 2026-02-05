@@ -1,7 +1,9 @@
 import styles from "./Home.module.css";
+
 import { useFetchDocuments } from "../../hooks/useFetchDocuments";
 import { useNavigate, Link } from "react-router-dom";
 import { useState } from "react";
+
 import PostDetail from "../../components/PostDetail";
 
 const Home = () => {
